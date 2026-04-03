@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery - Baapokan</title>
+    <link rel="icon" type="image/png" href="blok1.jpg">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
+        
+        body {
+            background: radial-gradient(circle, #2a0000 0%, #000000 100%);
+            font-family: 'Space Mono', monospace;
+            animation: flicker 0.15s infinite;
+            color: #f3f4f6;
+            overflow-x: hidden;
+        }
+
+        /* --- CRT SCANLINE EFFECT --- */
+        body::before {
+            content: " "; display: block; position: fixed; top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            z-index: 9998; background-size: 100% 4px, 3px 100%; pointer-events: none; opacity: 0.3;
+        }
+
+        @keyframes flicker { 0% { opacity: 0.98; } 50% { opacity: 1; } 100% { opacity: 0.99; } }
+
+        /* --- GLITCH PRELOADER --- */
+        #preloader {
+            position: fixed; inset: 0; background: #000; z-index: 9999;
+            display: flex; justify-content: center; align-items: center;
+            transition: opacity 0.6s ease-in-out;
+        }
+        .preloader-text {
+            font-size: 3rem; font-weight: 900; color: #ff0000;
+            text-transform: uppercase; animation: glitch-anim 0.2s infinite;
+            text-shadow: 2px 0 #fff, -2px 0 #4d0000;
+        }
+        @keyframes glitch-anim {
+            0% { transform: translate(0); }
+            20% { transform: translate(-5px, 5px); }
+            40% { transform: translate(-5px, -5px); }
+            100% { transform: translate(0); }
+        }
+
+        /* --- NAV & TEXT GLITCH --- */
+        nav { backdrop-filter: blur(15px); border-bottom: 1px solid #4d0000; background: rgba(0, 0, 0, 0.9); }
+        .text-glow { text-shadow: 0 0 20px rgba(255, 0, 0, 0.8); }
+        .glitch-hover:hover { animation: glitch 0.3s linear infinite; }
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-3px, 3px); text-shadow: 2px 0 red; }
+            40% { transform: translate(-3px, -3px); text-shadow: -2px 0 #4d0000; }
+            100% { transform: translate(0); }
+        }
+
+        /* --- CARD REVEAL ANIMATION --- */
+        @keyframes cardReveal {
+            0% { opacity: 0; transform: translateY(50px) scale(0.9); filter: brightness(0); }
+            100% { opacity: 1; transform: translateY(0) scale(1); filter: brightness(1); }
+        }
+        .metal-card {
+            background: linear-gradient(145deg, #4d0000, #1a0000);
+            border: 1px solid #8b0000;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            opacity: 0; /* Mulai dari tidak terlihat untuk animasi */
+            cursor: zoom-in;
+        }
+        .show-card { animation: cardReveal 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards; }
+        
+        .metal-card:hover { 
+            transform: translateY(-10px) scale(1.02); 
+            border-color: #ff0000; 
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.4); 
+        }
+
+        /* --- LIGHTBOX & BUTTON --- */
+        #lightbox {
+            display: none; position: fixed; inset: 0; z-index: 1001; background: rgba(0,0,0,0.95);
+            justify-content: center; align-items: center; backdrop-filter: blur(10px);
+        }
+        .btn-metal { border: 1px solid #ff0000; color: #ff0000; transition: 0.3s; background: transparent; }
+        .btn-metal:hover { background: #ff0000; color: white; box-shadow: 0 0 20px rgba(255, 0, 0, 0.6); }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: #ff0000; }
+    </style>
+</head>
+<body class="pt-32 pb-10">
+
+    <div id="preloader"><div class="preloader-text">BAAPOKAN</div></div>
+
+    <div id="lightbox" onclick="closeLightbox()">
+        <img id="lightbox-img" src="" class="max-w-[90%] max-h-[80%] border-2 border-red-600 shadow-[0_0_50px_rgba(255,0,0,0.5)]">
+    </div>
+
+    <nav class="fixed top-0 w-full z-50 py-4 px-10 flex justify-between items-center">
+        <a href="index.html" class="text-2xl font-black uppercase text-red-600 text-glow glitch-hover">
+            Baa<span class="text-white">po</span>kan
+        </a>
+        <div class="space-x-8 font-mono text-[10px] uppercase tracking-widest">
+            <a href="index.html" class="hover:text-red-500 transition">Home</a>
+            <a href="gallery.html" class="text-red-500">Gallery</a>
+        </div>
+    </nav>
+
+    <main class="max-w-6xl mx-auto px-6">
+        <h2 class="text-red-600 text-center text-xs tracking-[0.5em] uppercase mb-16 text-glow">GALLERY</h2>
+        
+        <div id="gallery-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <script>
+                for(let i=1; i<=6; i++) {
+                    let fileName = (i >= 4) ? `blok${i}.JPG` : `blok${i}.jpg`;
+                    document.write(`
+                        <div class="metal-card aspect-square overflow-hidden group" onclick="openLightbox('${fileName}')">
+                            <img src="${fileName}" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition duration-700">
+                            <div class="absolute inset-0 bg-red-900/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                                <span class="text-[10px] text-white tracking-widest uppercase bg-black/80 px-2 py-1">Archive_0${i}</span>
+                            </div>
+                        </div>
+                    `);
+                }
+            </script>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mt-8">
+            <div class="metal-card aspect-[3/4] md:col-span-1" onclick="openLightbox('blok7.jpg')">
+                <img src="blok7.jpg" class="w-full h-full object-cover grayscale hover:grayscale-0 transition duration-700">
+            </div>
+            <div class="metal-card aspect-video md:col-span-2" onclick="openLightbox('blok8.jpg')">
+                <img src="blok8.jpg" class="w-full h-full object-cover grayscale hover:grayscale-0 transition duration-700">
+            </div>
+            <div class="metal-card aspect-[3/4] md:col-span-1" onclick="openLightbox('blok9.jpg')">
+                <img src="blok9.jpg" class="w-full h-full object-cover grayscale hover:grayscale-0 transition duration-700">
+            </div>
+        </div>
+
+        <div class="text-center mt-24">
+            <a href="index.html" class="btn-metal px-10 py-3 font-mono text-[10px] uppercase tracking-widest inline-block">
+                Back to Home
+            </a>
+        </div>
+    </main>
+
+    <footer class="mt-20 py-10 text-center border-t border-red-900">
+        <p class="text-red-900 font-mono text-[10px] tracking-widest uppercase">&copy; Baapokan — BLOOD RELATIVES</p>
+    </footer>
+
+    <script>
+        // Preloader
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('preloader').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('preloader').style.display = 'none';
+                    revealCards(); // Mulai animasi kartu setelah preloader hilang
+                }, 600);
+            }, 1500);
+        });
+
+        // Animasi munculnya kartu satu per satu
+        function revealCards() {
+            const cards = document.querySelectorAll('.metal-card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.classList.add('show-card');
+                }, index * 150); // Delay 150ms tiap kartu agar efek "flowing"
+            });
+        }
+
+        function openLightbox(src) {
+            document.getElementById('lightbox-img').src = src;
+            document.getElementById('lightbox').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+    </script>
+</body>
+</html>
