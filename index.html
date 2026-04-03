@@ -3,7 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     <title>Baapokan - Anak Umak</title>
+
+    <meta property="og:title" content="Baapokan - Anak Umak">
+    <meta property="og:description" content="Official Archive of Baapokan — BLOOD RELATIVES. Explore our gallery and updates.">
+    <meta property="og:image" content="https://jaidanfikra.github.io/Baapokan/blok1.jpg">
+    <meta property="og:url" content="https://jaidanfikra.github.io/Baapokan/">
+    <meta property="og:type" content="website">
+
     <link rel="icon" type="image/png" href="blok1.jpg">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -14,7 +22,6 @@
             overflow-x: hidden;
             scroll-behavior: smooth;
             font-family: 'Space Mono', monospace;
-            /* Efek kedipan layar halus */
             animation: flicker 0.15s infinite;
         }
 
@@ -36,20 +43,6 @@
             0% { opacity: 0.98; }
             50% { opacity: 1; }
             100% { opacity: 0.99; }
-        }
-
-        /* --- MOUSE TRAILING TEXT --- */
-        #cursor-follower {
-            position: fixed;
-            pointer-events: none;
-            z-index: 10000;
-            color: #ff0000;
-            font-size: 8px;
-            font-weight: bold;
-            text-transform: uppercase;
-            white-space: nowrap;
-            letter-spacing: 2px;
-            mix-blend-mode: difference;
         }
 
         /* --- GLITCH PRELOADER --- */
@@ -214,21 +207,19 @@
     <section id="gallery" class="min-h-screen pt-20 flex flex-col items-center bg-black pb-20">
         <main class="max-w-6xl w-full mx-auto px-6 py-12">
             <div id="gallery-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-               <script>
-    for(let i=1; i<=6; i++) {
-        // Logika: jika angka 4, 5, atau 6, gunakan HURUF BESAR
-        let fileName = (i >= 4) ? `blok${i}.JPG` : `blok${i}.jpg`;
-        
-        document.write(`
-            <div class="metal-card aspect-square overflow-hidden group" onclick="openLightbox('${fileName}')">
-                <img src="${fileName}" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition duration-700">
-                <div class="absolute inset-0 bg-red-900/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
-                    <span class="text-[10px] text-white tracking-widest uppercase bg-black/80 px-2 py-1">Archive_0${i}</span>
-                </div>
-            </div>
-        `);
-    }
-</script>
+                <script>
+                    for(let i=1; i<=6; i++) {
+                        let fileName = (i >= 4) ? `blok${i}.JPG` : `blok${i}.jpg`;
+                        document.write(`
+                            <div class="metal-card aspect-square overflow-hidden group" onclick="openLightbox('${fileName}')">
+                                <img src="${fileName}" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition duration-700">
+                                <div class="absolute inset-0 bg-red-900/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                                    <span class="text-[10px] text-white tracking-widest uppercase bg-black/80 px-2 py-1">Archive_0${i}</span>
+                                </div>
+                            </div>
+                        `);
+                    }
+                </script>
             </div>
 
             <div class="mt-16">
@@ -256,13 +247,6 @@
     </footer>
 
     <script>
-        // Mouse Trail Logic
-        const trail = document.getElementById('cursor-follower');
-        document.addEventListener('mousemove', (e) => {
-            trail.style.left = (e.clientX + 15) + 'px';
-            trail.style.top = (e.clientY + 15) + 'px';
-        });
-
         // Preloader Logic
         window.addEventListener('load', () => {
             const preloader = document.getElementById('preloader');
