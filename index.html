@@ -1,24 +1,86 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Baapokan - Anak Umak</title>
-    
+    <title>Baapokan - Metal Home</title>
     <link rel="icon" type="image/png" href="blok1.jpg">
     <script src="https://cdn.tailwindcss.com"></script>
-    ...
-</head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Baapokan - Anak Umak </title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
+
         body {
             background: radial-gradient(circle, #2a0000 0%, #000000 100%);
             overflow-x: hidden;
             scroll-behavior: smooth;
+            font-family: 'Space Mono', monospace;
+            /* Efek kedipan layar halus */
+            animation: flicker 0.15s infinite;
+        }
+
+        /* --- CRT SCANLINE EFFECT --- */
+        body::before {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            z-index: 9998;
+            background-size: 100% 4px, 3px 100%;
+            pointer-events: none;
+            opacity: 0.4;
+        }
+
+        @keyframes flicker {
+            0% { opacity: 0.98; }
+            50% { opacity: 1; }
+            100% { opacity: 0.99; }
+        }
+
+        /* --- MOUSE TRAILING TEXT --- */
+        #cursor-follower {
+            position: fixed;
+            pointer-events: none;
+            z-index: 10000;
+            color: #ff0000;
+            font-size: 8px;
+            font-weight: bold;
+            text-transform: uppercase;
+            white-space: nowrap;
+            letter-spacing: 2px;
+            mix-blend-mode: difference;
+        }
+
+        /* --- GLITCH PRELOADER --- */
+        #preloader {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.6s ease-in-out;
+        }
+
+        .preloader-text {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #ff0000;
+            text-transform: uppercase;
+            letter-spacing: -0.05em;
+            animation: glitch-anim 0.2s infinite;
+            text-shadow: 2px 0 #fff, -2px 0 #4d0000;
+        }
+
+        @keyframes glitch-anim {
+            0% { transform: translate(0); }
+            20% { transform: translate(-5px, 5px); }
+            40% { transform: translate(-5px, -5px); }
+            60% { transform: translate(5px, 5px); }
+            80% { transform: translate(5px, -5px); }
+            100% { transform: translate(0); }
         }
 
         /* Navbar Glassmorphism */
@@ -37,6 +99,18 @@
             text-align: center;
         }
 
+        /* Glitch Animation for Hover */
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-3px, 3px); text-shadow: 2px 0 red; }
+            40% { transform: translate(-3px, -3px); text-shadow: -2px 0 #4d0000; }
+            100% { transform: translate(0); }
+        }
+
+        .glitch-hover:hover {
+            animation: glitch 0.3s linear infinite;
+        }
+
         /* Animasi Kartu Keluar */
         @keyframes cardReveal {
             0% { opacity: 0; transform: translateY(100px) rotateX(45deg) scale(0.8); filter: brightness(0); }
@@ -50,6 +124,7 @@
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             opacity: 0;
             cursor: zoom-in;
+            position: relative;
         }
 
         .show-card {
@@ -57,23 +132,13 @@
         }
 
         .metal-card:hover {
-            transform: translateY(-15px) scale(1.05);
+            transform: translateY(-15px) scale(1.02);
             border-color: #ff0000;
             box-shadow: 0 0 30px rgba(255, 0, 0, 0.4);
         }
 
         .text-glow {
             text-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
-        }
-
-        .logo-glow {
-            filter: drop-shadow(0 0 10px rgba(255, 0, 0, 0.6));
-            transition: all 0.3s ease;
-        }
-
-        .logo-glow:hover {
-            filter: drop-shadow(0 0 20px rgba(255, 0, 0, 1));
-            transform: scale(1.05);
         }
 
         .btn-metal {
@@ -90,11 +155,10 @@
             box-shadow: 0 0 25px rgba(255, 0, 0, 0.8);
         }
 
-        /* Lightbox Overlay */
         #lightbox {
             display: none;
             position: fixed;
-            z-index: 100;
+            z-index: 1001;
             top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.9);
             justify-content: center;
@@ -115,73 +179,100 @@
 </head>
 <body class="text-gray-100">
 
+    <div id="preloader">
+        <div class="preloader-text">BAAPOKAN</div>
+    </div>
+
+    <div id="cursor-follower">SYSTEM_ERROR_ID_090</div>
+
     <div id="lightbox" onclick="closeLightbox()">
         <img id="lightbox-img" src="" alt="Full View">
     </div>
 
     <nav class="fixed top-0 w-full z-50 py-4 px-10 flex justify-between items-center">
         <div class="flex items-center space-x-3 cursor-pointer" onclick="scrollToSection('home')">
-            <div class="text-2xl font-black uppercase tracking-tighter text-red-600 text-glow">
+            <div class="text-2xl font-black uppercase tracking-tighter text-red-600 text-glow glitch-hover">
                 Baa<span class="text-gray-100">po</span>kan
             </div>
         </div>
-        <div class="space-x-8 font-mono text-xs uppercase tracking-widest">
+        <div class="space-x-8 font-mono text-[10px] uppercase tracking-widest">
             <a href="javascript:void(0)" onclick="scrollToSection('home')" class="hover:text-red-500 transition">Home</a>
             <a href="javascript:void(0)" onclick="revealGallery()" class="hover:text-red-500 transition">Gallery</a>
         </div>
     </nav>
 
     <section id="home">
-        
-        <h1 class="text-7xl md:text-9xl font-black uppercase tracking-tighter text-red-600 text-glow mb-4">
+        <h1 class="text-7xl md:text-9xl font-black uppercase tracking-tighter text-red-600 text-glow mb-4 glitch-hover">
             BAA<span class="text-white">PO</span>KAN
         </h1>
-        
         <a href="https://instagram.com/baapokan" target="_blank" class="flex items-center space-x-2 text-gray-400 hover:text-white transition duration-300 mb-8 group">
-            <svg class="w-6 h-6 group-hover:text-red-500 transition" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.266.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c.796 0 1.441.645 1.441 1.44s-.645 1.44-1.441 1.44c-.795 0-1.439-.645-1.439-1.44s.644-1.44 1.439-1.44z"/></svg>
-            <span class="font-mono tracking-widest text-sm uppercase">@baapokan</span>
+            <span class="font-mono tracking-widest text-xs uppercase">@baapokan</span>
         </a>
-
-        <button onclick="revealGallery()" class="btn-metal px-10 py-3 font-mono text-sm uppercase tracking-[0.3em]">
-            Gallery
+        <button onclick="revealGallery()" class="btn-metal px-10 py-3 font-mono text-xs uppercase tracking-[0.3em]">
+            Access Gallery
         </button>
     </section>
 
-    <section id="gallery" class="min-h-screen pt-20 flex flex-col items-center">
+    <section id="gallery" class="min-h-screen pt-20 flex flex-col items-center bg-black pb-20">
         <main class="max-w-6xl w-full mx-auto px-6 py-12">
-            <div id="gallery-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-                <div class="metal-card aspect-square overflow-hidden group" onclick="openLightbox('blok1.jpg')">
-                    <img src="blok1.jpg" alt="1" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition duration-700">
-                </div>
-                <div class="metal-card aspect-square overflow-hidden group" onclick="openLightbox('blok2.jpg')">
-                    <img src="blok2.jpg" alt="2" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition duration-700">
-                </div>
-                <div class="metal-card aspect-square overflow-hidden group" onclick="openLightbox('blok3.jpg')">
-                    <img src="blok3.jpg" alt="3" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition duration-700">
-                </div>
-                <div class="metal-card aspect-square overflow-hidden group" onclick="openLightbox('blok4.JPG')">
-                    <img src="blok4.JPG" alt="4" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition duration-500">
-                </div>
-                <div class="metal-card aspect-square overflow-hidden group" onclick="openLightbox('blok5.JPG')">
-                    <img src="blok5.JPG" alt="5" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition duration-500">
-                </div>
-                <div class="metal-card aspect-square overflow-hidden group" onclick="openLightbox('blok6.JPG')">
-                    <img src="blok6.JPG" alt="6" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition duration-500">
+            <div id="gallery-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+                <script>
+                    for(let i=1; i<=6; i++) {
+                        document.write(`
+                            <div class="metal-card aspect-square overflow-hidden group" onclick="openLightbox('blok${i}.jpg')">
+                                <img src="blok${i}.jpg" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition duration-700">
+                                <div class="absolute inset-0 bg-red-900/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                                    <span class="text-[10px] text-white tracking-widest uppercase bg-black/80 px-2 py-1">Archive_0${i}</span>
+                                </div>
+                            </div>
+                        `);
+                    }
+                </script>
+            </div>
+
+            <div class="mt-16">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-8 items-center">
+                    <div class="metal-card aspect-[3/4] overflow-hidden group md:col-span-1" onclick="openLightbox('blok7.jpg')">
+                        <img src="blok7.jpg" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition duration-700">
+                    </div>
+                    <div class="metal-card aspect-video overflow-hidden group md:col-span-2" onclick="openLightbox('blok8.jpg')">
+                        <img src="blok8.jpg" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition duration-700">
+                    </div>
+                    <div class="metal-card aspect-[3/4] overflow-hidden group md:col-span-1" onclick="openLightbox('blok9.jpg')">
+                        <img src="blok9.jpg" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition duration-700">
+                    </div>
                 </div>
             </div>
         </main>
 
-        <button onclick="scrollToSection('home')" class="mb-20 btn-metal px-8 py-2 font-mono text-xs uppercase tracking-widest flex items-center gap-2 group">
-            <svg class="w-4 h-4 transform group-hover:-translate-y-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
+        <button onclick="scrollToSection('home')" class="mt-20 btn-metal px-8 py-2 font-mono text-[10px] uppercase tracking-widest flex items-center gap-2 group">
             Back to Home
         </button>
     </section>
 
     <footer class="py-10 text-center border-t border-red-900 bg-black">
-        <p class="text-red-900 font-mono text-xs tracking-widest uppercase">&copy; Baapokan -BLOOD RELATIVES</p>
+        <p class="text-red-900 font-mono text-[10px] tracking-widest uppercase">&copy; Baapokan — BLOOD RELATIVES</p>
     </footer>
 
     <script>
+        // Mouse Trail Logic
+        const trail = document.getElementById('cursor-follower');
+        document.addEventListener('mousemove', (e) => {
+            trail.style.left = (e.clientX + 15) + 'px';
+            trail.style.top = (e.clientY + 15) + 'px';
+        });
+
+        // Preloader Logic
+        window.addEventListener('load', () => {
+            const preloader = document.getElementById('preloader');
+            setTimeout(() => {
+                preloader.style.opacity = '0';
+                setTimeout(() => {
+                    preloader.style.display = 'none';
+                }, 600);
+            }, 1800);
+        });
+
         function scrollToSection(id) {
             document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
         }
@@ -194,7 +285,7 @@
                 void card.offsetWidth; 
                 setTimeout(() => {
                     card.classList.add('show-card');
-                }, index * 100 + 500); 
+                }, index * 100 + 300); 
             });
         }
 
@@ -208,7 +299,19 @@
             document.getElementById('lightbox').style.display = 'none';
             document.body.style.overflow = 'auto';
         }
-    </script>
 
+        window.addEventListener('scroll', () => {
+            const gallerySection = document.getElementById('gallery');
+            if (gallerySection) {
+                const position = gallerySection.getBoundingClientRect().top;
+                if (position < window.innerHeight - 200) {
+                    const cards = document.querySelectorAll('.metal-card');
+                    if (cards.length > 0 && !cards[0].classList.contains('show-card')) {
+                        revealGallery();
+                    }
+                }
+            }
+        });
+    </script>
 </body>
 </html>
